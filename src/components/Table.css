@@ -1,0 +1,12 @@
+th {
+    background-color: #ddecfa;
+    padding: 10px;
+    text-transform: uppercase;
+    font-weight: normal;
+    font-size: 18px;
+    color: #17485f;
+}
+
+tr:nth-child(2n) {
+    background-color: aliceblue;
+}
