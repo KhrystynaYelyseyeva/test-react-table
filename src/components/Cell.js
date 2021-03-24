@@ -1,73 +1,73 @@
 import React, { useState, useEffect, useRef } from 'react';
 
-import { Grid, Paper } from '@material-ui/core';
+import { Grid, IconButton } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
+import { makeStyles } from '@material-ui/core/styles';
+import { NavigateBeforeSharp } from '@material-ui/icons';
 
+const useStyles = makeStyles({
+  expanded: {
+    overflow: 'hidden',
+    textOverflow: 'initial',
+    whiteSpace: 'normal', 
+  },
+  collapsed: {
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap', 
+  },
+});
 
 export const Cell = ({ text }) => {
   const [expandText, setExpandText ] = useState(false);
   const [showButton, setShowButton ] = useState(false);
+
   const containerRef = useRef();
   const contentRef = useRef();
 
   useEffect(() => {
     checkWidth();
   }, [])
-
+  
   const checkWidth = () => {
-    setShowButton(contentRef.current.offsetHeight > containerRef.current.offsetHeight);
+    setShowButton(contentRef.current.offsetWidth > containerRef.current.offsetWidth);
   }
 
   const toggleVisibility = () => {
     setExpandText(prevState => !prevState)
   }
 
+  const classes = useStyles();
+
   return (
-    <Grid container style={{display:'flex'}}>
-      <Grid
-        item
-        style={{
-          maxWidth: '250px',
-          height: expandText ? '100%' : '24px',
-          overflow: expandText ? 'inherit' : 'hidden',
-        }}
+    <Grid
+      container
+      direction='row'
+      wrap='nowrap'
+      justify='space-between'
+      alignItems={ expandText ? 'flex-end' : 'center' }
+      style={{maxWidth: 150}}
+    >
+      <Grid item
         ref={containerRef}
+        className={expandText ? classes.expanded : classes.collapsed}
       >
-        <span ref={contentRef}>
-          {text}
+        <span ref={contentRef} style={{padding: 8}}>
+          { text || " " }
         </span>
       </Grid>
       {showButton && (
-        <Grid item style={{alignSelf: 'flex-end'}}>
-          <button
+        <Grid item>
+          <IconButton
+            size='small'
             onClick={toggleVisibility}
-            style={{
-              backgroundColor: 'transparent',
-              border: 'none',
-            }}
           >
-            { expandText ? <ExpandLessIcon/> : <ExpandMoreIcon/>}
-          </button>
+            { expandText ? <ExpandLessIcon fontSize='small' /> : <ExpandMoreIcon fontSize='small' />}
+          </IconButton>
         </Grid>
         )
       }
     </Grid>
-    // <div style={{display: 'flex'}}>
-    //   <div style={{maxWidth: '250px', maxHeight: '110px', overflow: showText ? 'inherit' : 'hidden'}} ref={containerRef}>
-    //     <span ref={contentRef}>
-    //       primis in faucibus orci luctus et ultrices posuere cubilia curae duis faucibus accumsan odio curabitur convallis duis consequat dui nec nisi volutpat eleifend donec ut dolor morbi vel lectus in quam fringilla
-    //     </span>
-    //   </div>
-    //   {showButton && (
-    //      <Grid item>
-    //        <button onClick={toggleVisibility}>
-    //          { showText ? 'Hide' : '...'}
-    //        </button>
-    //      </Grid>
-    //      )
-    //    }
-    // </div>
-
   )
 }
